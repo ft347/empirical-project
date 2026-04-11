@@ -30,11 +30,11 @@ The Random Forest model explains approximately 80% of the variance in London lis
 The feature importance and error analysis plots can be found in the figures/ directory
 
 ## How to run
-1. Clone the Repository
+1. **Clone the Repository**:
 git clone https://github.com/ft347/empirical-project.git
 
-2. Install dependencies
+2. **Install Dependencies**:
 pip install -r requirements.txt
 
-3. Run the notebooks
+3. **Run the Notebooks**:
 jupyter notebook
