@@ -1,4 +1,14 @@
+# Ignore system files
+.DS_Store
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Ignore data files (too large)
 data/
 *.csv
-.DS_Store
-.ipynb_checkpoints/
+*.gz
+
+# Ignore Python cache
+__pycache__/
+*.pyc
