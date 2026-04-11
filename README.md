@@ -21,8 +21,10 @@ This project analyses Airbnb listings in London to identify key drivers of price
 - Longitude and latitude play a crucial role, indicating higher price density in Central London
 
 ## Results
-Linear Regression R Squared: 0.621
-Random Forest Regression R Squared: 0.797
+|                 Model              |    Result     |
+| ---------------------------------- |:-------------:|
+|    Linear Regression R Squared     |     0.621     |
+| Random Forest Regression R Squared |     0.797     |
 
 The Random Forest model explains approximately 80% of the variance in London listing prices.
 
