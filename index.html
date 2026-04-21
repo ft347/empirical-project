@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>London Airbnb Listing Price Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:italic,wght@0,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --text: #334155;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.7; 
+            color: var(--text); 
+            background-color: #ffffff;
+            margin: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 600; margin-left: 1.5rem; font-size: 0.9rem; }
+        nav a:hover { color: var(--primary); }
+
+        header {
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(to bottom, #f1f5f9, #ffffff);
+            text-align: center;
+        }
+        h1 { font-family: 'Inter', sans-serif; font-size: 2.8rem; color: var(--dark); margin-bottom: 1rem; }
+        .subtitle { font-family: 'Lora', serif; font-size: 1.2rem; color: #64748b; max-width: 800px; margin: 0 auto; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+        h2 { color: var(--dark); font-size: 2rem; border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem; }
+
+        .card { background: var(--light); padding: 2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1.5rem 0; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #f1f5f9; color: var(--dark); }
+
+        pre {
+    background: #f1f5f9;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto; 
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    border: 1px solid var(--border);
+}
+
+        code { background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9rem; color: #be185d; }
+        .explanation { font-style: italic; color: #475569; font-size: 0.95rem; border-left: 2px solid #cbd5e1; padding-left: 1rem; margin: 1rem 0; }
+
+        .figure-box { text-align: center; margin: 2rem 0; }
+        .figure-box img { 
+            max-width: 100%; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .figure-box img:hover { transform: scale(1.02); }
+        .caption { font-size: 0.85rem; color: #64748b; margin-top: 10px; }
+
+        footer { text-align: center; padding: 4rem; background: var(--dark); color: white; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-weight: 700;">Airbnb Listing Price Analysis</div>
+        <div>
+            <a href="#overview">Overview</a>
+            <a href="#collection">Collection</a>
+            <a href="#cleaning">Cleaning</a>
+            <a href="#analysis">Analysis</a>
+            <a href="#modelling">Modelling</a>
+            <a href="#conclusion">Conclusion</a>
+        </div>
+    </nav>
+
+    <header id="overview">
+        <h1>London Airbnb Listing Price Analysis</h1>
+        <p class="subtitle">BEE2041 Empirical Project exploring what property and location factors determine Airbnb listing prices in London</p>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>Project Overview</h2>
+            <p>This project analyses Airbnb listings in London to identify key drivers of price and build predictive models. Using a combination of geographical data and property characteristics, the project aims to provide insights for both hosts (for pricing strategy) and guests (for seeking value).</p>
+            <div class="card">
+                <strong>Dataset Metrics:</strong>
+                <ul>
+                    <li><strong>Observations:</strong> 46,390 rows</li>
+                    <li><strong>Features:</strong> 21 independent variables</li>
+                    <li><strong>Source:</strong> Inside Airbnb (London Repository)</li>
+                </ul>
+            </div>
+            <div>
+            <h3>Methodology</h3>
+            <p>
+            1. Data Collection: Sourcing raw CSV data from Inside Airbnb <br>
+2. Data Cleaning: Handling missing values, removing outliers, and log transforming price to handle skewness <br>
+3. Data Analysis: Visualising price distribution and comparing correlations <br>
+4. Modelling: Training and evaluating Linear Regression & Random Forest models <br>
+5. Conclusion: Evaluating feature importance and the performance of the model
+            </p>
+        </div>
+        <div style="padding-top: 7px;">
+            <h3>Key Findings</h3>
+            <ul style="padding-left:17px">
+       <li>The most significant predictor of listing price is whether the property is a "Private Room" or an "Entire Home" </li>
+<li>The number of bathrooms and bedrooms significantly drives listing price</li>
+<li>Longitude and latitude play a crucial role, indicating higher price density in Central London </li>
+</ul>
+        </div>
+        <div style="padding-top: 7px;">
+            <h3>Results</h3>
+            <table>
+                <tr>
+                    <th>Model</th>
+                    <th>Result</th>
+                </tr>
+                <tr>
+                    <td>Linear Regression R Squared</td>
+                    <td>0.621</td>
+                </tr>
+                <tr>
+                    <td>Random Forest Regression R Squared</td>
+                    <td>0.797</td>
+                </tr>
+            </table>
+        </div>
+        </section>
+
+        <section id="collection">
+            <h2>1. Data Collection</h2>
+    <p>
+        The data for this project was obtained from <strong>Inside Airbnb</strong>, a project that provides data that quantifies the impact of short-term rentals on housing and communities. Using this pre-complied dataset from a reputable source ensures that the project is reproducible.
+    </p>
+
+    <div class="card">
+        <h4>Why this dataset?</h4>
+        <ul>
+            <li><strong>Complex Dataset:</strong> Includes over 20 different variables, allowing for strong data transformation</li>
+            <li><strong>Validity:</strong> Contains raw strings (e.g. "$75.00") and missing data, requiring robust cleaning.</li>
+            <li><strong>Academic Standard:</strong> Frequently used in a range of studies and economic research</li>
+        </ul>
+    </div>
+
+    <div class="explanation">
+        Using <code>df = pd.read_csv(url, compression="gzip")</code> the CSV was loaded into the notebook and then saved locally using <code>df.to_csv("../data/raw/london.csv", index=False)</code>. Finally, <code>df.shape</code> was used to ensure the data had been loaded correctly.
+    </div>
+        </section>
+
+        <section id="cleaning">
+            <h2>2. Data Cleaning</h2>
+            <p>
+        The raw dataset for Airbnb prices in London contained 79 columns, many of which were irrelevant for price prediction (e.g. <code>picture_url</code>). As such, the process of cleaning the dataset focused on converting data into a consistent and easily readable format, whilst maintaining the integrity of the observations.
+    </p>
+
+<div class="card">
+        <h4>Step 1: Isolating Columns</h4>
+        <p>The 16 desired columns were identified and listed using a list labelled cols. Then, in order to preserve the original dataset, a new dataset was created consisting of only these desired columns.</p>
+    
+
+        <pre><code>
+cols = [
+    "price",
+    "accommodates",
+    "bedrooms",
+    "beds",
+    "bathrooms",
+    "property_type",
+    "room_type",
+    "latitude",
+    "longitude",
+    "review_scores_rating",
+    "number_of_reviews",
+    "reviews_per_month",
+    "availability_365",
+    "host_is_superhost",
+    "host_listings_count",
+    "instant_bookable"
+]
+
+# Create new DataFrame with only the desired columns
+df_1 = df[cols].copy()</code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 2: Changing Data Types & Removing Nulls</h4>
+        <p>The <code>price</code> column was converted from a currency string to a float and after checking for missing values, any row containing these was dropped.</p>
+        
+        <div class="explanation">
+            <strong>Reasoning:</strong> Price data is scraped as a string (e.g. "$70.00"). However, our regression requires these inputs to be float values.
+        </div>
+
+        <pre><code>
+# Change price from a string to a float
+df_1["price"] = df_1["price"].replace(r"[\$,]", "", regex=True).astype(float)
+
+# Check for missing values
+print(df_1.isnull().sum())
+
+# Drop rows with missing values
+df_1 = df_1.dropna()</code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 3: Boolean Variables</h4>
+        <p>True and False values were changed to binary integers 1 and 0.</p>
+
+        <div class="explanation">
+            <strong>Reasoning:</strong> Variables like <code>host_is_superhost</code> and <code>instant_bookable</code> are qualitative. By using quantitative measures, our model can calculate a coefficient for a "Superhost Premium".
+        </div>
+        <pre><code>
+df_1["host_is_superhost"] = df_1["host_is_superhost"].map({"t": 1, "f": 0})
+df_1["instant_bookable"] = df_1["instant_bookable"].map({"t": 1, "f": 0})</code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 4: Handling Extreme Outliers</h4>
+        <p>321 listings were identified as being priced above £1,000 per night, which is the threshold for being an outlier, and so these were removed them from the dataset.</p>
+
+        <div class="explanation">
+            <strong>Reasoning:</strong> Extreme outliers significantly affect the value of our Mean Squared Error (MSE). Because these more expensive listings don't reflect the typical London market, removing them ensures the model generalises better to 99% of the population.
+        </div>
+
+        <pre><code>
+# Check number of properties priced above $1000
+print(len(df_1[df_1["price"]>1000]))
+
+# Remove these extreme outliers
+df_1 = df_1[df_1["price"] <= 1000]
+        </code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 5: Encoding Property Type</h4>
+        <p>The raw <code>property_type</code> column contained over 90 individual category types. To allow this to be reflected in our model, this was simplified into 4 groups.</p>
+
+        <div class="explanation">
+            <strong>Reasoning:</strong> The original categories (e.g. "Entire Townhouse") were too infrequent. By grouping these categories together, the statistical significance of each category is increased and the risk of overfitting is reduced. <code>get_dummies</code> was used to convert these simplified groups into the binary format needed to run our regression models.
+        </div>
+
+        <pre><code>
+# Simplify property_type
+df_1["property_type_simple"] = df_1["property_type"].apply(
+    lambda x: "Entire" if "Entire" in x
+    else "Private Room" if "Private room" in x
+    else "Shared Room" if "Shared room" in x
+    else "Other"
+)
+
+# Drop original property_type column
+df_1 = df_1.drop("property_type", axis=1)
+
+# Encode category columns
+df_1 = pd.get_dummies(df_1, columns=[
+    "property_type_simple",
+    "room_type"
+], drop_first=True, dtype=int)
+        </code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 6: Log Price Transformation</h4>
+        <p>Finally, a log transformation was applied to the price column.</p>
+
+        <div class="explanation">
+            <strong>Reasoning:</strong> The original price distribution is heavily right-skewed. Because most regression models assume constant variance, we need to use a log transformation to stabilise the variance and fit this assumption. This helps the model make better predictions by reducing the impact of any remaining outliers.
+        </div>
+
+        <pre><code>
+# Log transform price
+df_1["log_price"] = np.log(df_1["price"])
+        </code></pre>
+    </div>
+        </section>
+
+        <section id="analysis">
+            <h2>3. Data Analysis</h2>
+            <p>
+        Before modelling, data analysis was conducted to identify relationships between variables, any instances of multi-collinearity, and check the decisions made during cleaning.
+    </p>
+
+    <div class="card">
+        <h4>Price Distribution</h4>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_price_dist.png">
+                <div class="caption">Figure 1: Raw Price</div>
+            </div>
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_log_price_dist.png">
+                <div class="caption">Figure 2: Log Price</div>
+            </div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> Figure 1 shows a right-skewed distribution, which is often seen with data in economics. By applying the log transformation (Figure 2), we see a distribution that resembles a Normal distribution. This is a crucial transformation because Linear Regression assumes that the error terms are normally distributed.
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Physical Factors</h4>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_bedrooms_price.png" alt="Bedrooms vs Price">
+                <div class="caption">Figure 3: Price by Bedrooms</div>
+            </div>
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_accommodates_price.png" alt="Accommodates vs Price">
+                <div class="caption">Figure 4: Price by Guest Capacity</div>
+            </div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            Both charts show a strong positive correlation. These graphs both demonstrate that as the capacity for guests at a property increases, there is a linear rise in median price. Furthermore, Figure 4 shows that the variance in price also increases for larger properties as the data points are more spread, compared to in smaller properties where points are clustered together. This suggests that other factors become more prominent in determining price as the size of the property increases.
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Geographical Influence</h4>
+        <div class="figure-box">
+            <img src="figures/03_longitude_latitude.png" alt="Geospatial Plot">
+            <div class="caption">Figure 5: Price Heatmap by Longitude and Latitude</div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            By plotting longitude and latitude against median listing price, we clearly see the premium price associated with properties in Central London. Listing prices are highest in areas such as Westminster and Kensington and gradually decrease as we move out of central London. This graph justifies the inclusion of longitude and latitude in our models as they are strong indicators of listing price.
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Room Types and Host Status</h4>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_price_room_type.png" alt="Room Type Price">
+                <div class="caption">Figure 6: Price by Room Type</div>
+            </div>
+            <div class="figure-box" style="flex: 1; min-width: 300px;">
+                <img src="figures/03_superhost_price.png" alt="Superhost Price">
+                <div class="caption">Figure 7: Superhost vs. Standard Host</div>
+            </div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            Figure 6 shows that Entire Homes demand the highest prices, while Shared Rooms are a more budget option. This suggests that privacy is a primary driver in listing prices and thus private spaces are priced more highly than communal listings. On the other hand, Figure 7 shows a negligible difference in median price when comparing Superhost status, implying that while Superhost status may improve booking rates, it doesn't necessarily allow for higher price premiums.
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Review Ratings</h4>
+        <div class="figure-box">
+            <img src="figures/03_review_rating_price.png" alt="Review Rating vs Price">
+            <div class="caption">Figure 8: Review Scores vs. Price</div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            The scatter plot of review rating against price shows a very weak relationship. As most listings have clustered high ratings of 4.5+, we are unable to accurately measure the effect of review ratings on listing price. This informs our decision to focus our predictive model on physical aspects of the property rather than social metrics.
+        </div>
+    </div>
+        </section>
+
+        <section id="modelling">
+            <h2>4. Modelling</h2>
+    <p>
+        To better understand how property and location factors affect Airbnb listing prices in London, predictive machine learning was utilised. We compared a traditional Linear Regression to a Random Forest Regression to help predict listing values and rank the most important features in making these predictions.
+    </p>
+
+    <div class="card">
+        <h4>Step 1: Train and Test Split</h4>
+        <div class="explanation">
+            <strong>Reasoning:</strong> A Train and Test Split with an 80/20 ratio was used to train the model on one set of data and test it on another set. This is important in detecting overfitting, which is when a model learns training data too well and so    performs poorly on unseen data. We also used <code>random_state=42</code> to ensure reproducibility so that if the notebook is run again the same results will occur.
+        </div>
+        <pre><code>
+# Define X and y
+X = df.drop(["price", "log_price"], axis=1)
+y = df["log_price"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+ </code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 2: Baseline Model (Linear Regression)</h4>
+        <div class="explanation">
+            <strong>Reasoning:</strong> Linear Regression was used as a benchmark model because it is easy to interpret and so allows us to see the specific weight assigned to each variable. However, because it is a parametric test, it assumes linear 
+            relationships that may not exist in Airbnb listing data for London.
+        </div>
+        <pre><code>
+# Create a baseline linear regression model
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+
+y_predict_lr = lr.predict(X_test)
+
+# Evaluate model
+print("Linear Regression R Squared:", r2_score(y_test, y_predict_lr))
+print("Linear Regression Root Mean Squared Error:", root_mean_squared_error(y_test, y_predict_lr))
+        </code></pre>
+    </div>
+
+    <div class="card">
+        <h4>Step 3: Advanced Model (Random Forest)</h4>
+        <div class="explanation">
+            <strong>Reasoning:</strong> 
+            Random Forest is a non-parametric test, meaning it makes few assumptions about the distribution of the data and uses rankings instead. This is ideal for this skewed dataset, which we saw in Figure 1. This regression was chosen because it uses averaging to improved predictive accuracy and control overfitting, as well as capturing non-linear relationships and feature interactions (e.g. the way the impact of Room Type changes based on Longitude/Latitude).
+        </div>
+        <pre><code>
+# Create Random Forest Model
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+y_predict_rf = rf.predict(X_test)
+
+# Evaluate model
+print("Random Forest R Squared:", r2_score(y_test, y_predict_rf))
+print("Random Forest Root Mean Squared Error:", root_mean_squared_error(y_test, y_predict_rf))
+        </code></pre>
+    </div>
+
+    <div class="card" id="results">
+        <h4>Model Performance Comparison</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Linear Regression</th>
+                    <th>Random Forest</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>R²</strong></td>
+                    <td>0.621</td>
+                    <td>0.797</td>
+                </tr>
+                <tr>
+                    <td><strong>RMSE</strong></td>
+                    <td>0.443</td>
+                    <td>0.324</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            When comparing the two models, it is evident that the Random Forest Regression signficantly outperformed the baseline Linear Regression. The Random Forest model had an R² of 0.797, explaining nearly 80% of the variance in price, compared to only 62% in the Linear Regression. Furthermore, the lower RMSE (Root Mean Squared Error) of the Random Forest model indicates that on average, the Random Forest price predictions are closer to the actual logged prices.
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Key Drivers of Price</h4>
+        <div class="figure-box">
+            <img src="figures/04_feature_importance.png" alt="Feature Importance Chart">
+            <div class="caption">Figure 9: Feature Importance</div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            The Feature Importance confirms that the privacy of a listing (e.g. having a private room), as well as the size of the property (number of bathrooms) are more predictive of price than host reputation (superhost status).
+        </div>
+    </div>
+
+    <div class="card">
+        <h4>Random Forest Model Accuracy</h4>
+        <div class="figure-box">
+            <img src="figures/04_predicted_vs_actual_prices.png" alt="Predicted vs Actual Scatter">
+            <div class="caption">Figure 10: Predicted vs. Actual Prices (Random Forest)</div>
+        </div>
+        <div class="explanation">
+            <strong>Analysis:</strong> 
+            Figure 10 shows a scatter plot of prices predicted by the Random Forest model based on the training data, compared to the actual prices from the test data. There is strong positive correlation, confirming that the Random Forest model's predictions are highly correlated with actual market listing values. However, there are some points at which the cluster of points becomes wider, suggesting areas where additional attributes (such as luxury features) might need further refinement.
+        </div>
+    </div>
+</section>
+
+        <section id="conclusion">
+            <h2>5. Conclusion</h2>
+    <p>
+      This project aimed to predict the listing prices of Airbnbs in London using machine learning techniques. By analysing various property features, such as location (latitude and longitude) and room types, models were developed to better understand the primary drivers of rental costs in London.
+    </p>
+
+    <div class="card">
+        <h4>Key Findings</h4>
+        <ul>
+            <li><strong>Room Type:</strong> 
+            Room Type remains the single most influential factor in determining price; with the most significant variance in price was between a Private Room and an Entire Home.
+            </li>
+
+            <li><strong>Property Features over Reputation:</strong> 
+            The physical capacity of a property (number of bedrooms and bathrooms) is a more accurate predictor of listing price than superhost status or review rating.
+            </li>
+
+            <li><strong>Geographical Influence:</strong> 
+            Despite the rise in popularity of remote work and the wide transport links available in London, location still retains a powerful influence on listing prices, specifically regarding properties within Central London.
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h4>Project Limitations</h4>
+        <ul>
+            <li><strong>Snapshot Data:</strong> The dataset used only represents a snapshot in time and so doesn't fully capture seasonal trends, such as how listing prices change over Christmas or holiday seasons, etc.</li>
+            <li><strong>Missing Property Features:</strong> The dataset lacks high-value property features, such as air conditioning and hot tubs, etc., which might explain outliers in price.</li>
+            <li><strong>Log Price Transformation:</strong> Models were trained using log_price in order to handle skewness. Whilst this improves the accuracy of the model, it can make direct interpretations of errors in price more complex.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h4>Future Improvements</h4>
+        <ul>
+            <li><strong>External Data:</strong> Merging the dataset with additional data could help address some of the limitations and also improve the accuracy of the model conclusions. For example, including data over different periods of time to account for seasonal differences or merging with tube station proximity to improve the importance score of location</li>
+            <li><strong>Rating Analysis:</strong> Rather than simply using a numeric rating on the property, the description or reviews could be analysed to gauge a rating of the quality of the host.</li>
+            <li><strong>Hyperparameter Tuning:</strong> The root mean squared error returned by the Random Forest model could be reduced by fine tuning the hyperparameters, for example by allowing it to search for every possible combination, rather than limiting the model.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h4>Final Summary</h4>
+        <p>
+            This project demonstrates that while London's rental market is complex, approximately 80% of its pricing behavior can be explained through different property features and location. The analysis of this dataset successfully identifies that the type of listing, the bathroom count and the location are more predictive of price than the popularity of a property (the number of reviews). This analysis can be used by hosts looking to optimise their listing price, suggesting that they should focus on the privacy of the room and the number of available facilities. While for guests, the data suggests that moving slightly further out of Central London offers better value without necessarily sacrificing the quality of the property.
+        </p>
+    </div>
+</section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 | BEE2041 Empirical Project</p>
+        <p><a href="https://github.com/ft347/empirical-project" style="color: #94a3b8;">View Source Code on GitHub</a></p>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
