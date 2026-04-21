@@ -3,6 +3,8 @@
 ## Overview
 This project analyses Airbnb listings in London to identify key drivers of price and build predictive models. Using a combination of geographical data and property characteristics, the project aims to provide insights for both hosts (for pricing strategy) and guests (for seeking value).
 
+The full project can be viewed at https://ft347.github.io/empirical-project/
+
 ## Dataset
 - Source: Inside Airbnb
 - Observations: 46,390 rows
